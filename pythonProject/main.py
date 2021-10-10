@@ -63,13 +63,12 @@ def getTable(message):
 @bot.message_handler(commands=['db_create'])
 def tableCreation(message):
     chat_id = message.chat.id
-    bot.send_message(chat_id, "Enter pass:")
     checkAccess(message)
 
 
 def checkAccess(message):
     chat_id = message.chat.id
-    print(chat_id)
+    bot.send_message(chat_id, chat_id)
     #if message.text == 'asi23oa5nuiSU(NDSax':
     createTable(message)
     #else:
@@ -103,7 +102,7 @@ def createTable(message):
             for command in commands:
                 cur.execute(command)
         else:
-            bot.send_message(message.chat_id, "Tables already exist")
+            bot.send_message(message.chat.id, "Tables already exist")
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
