@@ -51,13 +51,15 @@ def get_user_info(message):
                                 'email:           ' + str(resp['email']) + '\n')
 
 
-@bot.message_handler(commands=['DB'])
+@bot.message_handler(commands=['db_status'])
 def getTable(message):
     chat_id = message.chat.id
     conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
-    bot.send_message(chat_id, "Enter what username do you want to check:")
-    bot.register_next_step_handler(message, get_user_info)
-    cursor = conn.cursor()
+    cur = conn.cursor()
+    if checkIfTablesExists(conn, cur):
+        bot.send_message(message.chat.id, "Tables exist")
+    else:
+        bot.send_message(message.chat.id, "Tables not exist")
 
 
 @bot.message_handler(commands=['db_create'])
@@ -142,7 +144,10 @@ def dropTables(message):
     try:
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
-        cur.execute(сommand)
+        if message.chat.id == 455277222:
+            cur.execute(сommand)
+        else:
+            bot.send_message(message.chat.id, "You dont have permission for this action")
         cur.close()
         conn.commit()
         bot.send_message(message.chat.id, "Tables was successfully deleted")
