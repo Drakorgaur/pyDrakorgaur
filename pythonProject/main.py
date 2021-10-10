@@ -202,13 +202,12 @@ def get_user_data(message):
     if len(userData) == 2:
         command = (
             """
-            INSERT INTO users (id, name) VALUES (userId, userData);
+            INSERT INTO users (id, name) VALUES (%s, %s);
             """
         )
-    elif len(userData) == 1:
         command = (
             """
-            INSERT INTO users (id, name, last_name) VALUES (userId, userData[0], userData[1]);
+            INSERT INTO users (id, name, last_name) VALUES (%s, %s, %s);
             """
         )
     else:
@@ -217,7 +216,10 @@ def get_user_data(message):
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
-            cur.execute(command)
+            if len(userData) == 2:
+                cur.execute(command, (userId, userData))
+            elif len(userData) == 1:
+                cur.execute(command, (userId, userData[0], userData[1]))
         else:
             bot.send_message(message.chat.id, "Tables are not exist")
         cur.close()
