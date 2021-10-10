@@ -11,8 +11,14 @@ user_dict = {}
 
 
 class User:
-    def __init__(self, name):
-        self.name = name
+    def __init__(self, userId):
+        self.userId = userId
+
+    def setId(self, userId):
+        self.userId = userId
+
+
+user = User(0)
 
 
 @bot.message_handler(commands=['status'])
@@ -44,11 +50,12 @@ def get_user_info(message):
     response = requests.get('http://barzali.com/api/user/' + message.text + '/')
     resp = response.json()
     bot.send_message(chat_id, 'there')
-    bot.send_message(chat_id,   'Username:   ' + str(resp['username']) + '\n'
-                                'Groups:        ' + str(resp['groups']) + '\n'
-                                'First Name: ' + str(resp['first_name']) + '\n'
-                                'Last Name: ' + str(resp['last_name']) + '\n'
-                                'email:           ' + str(resp['email']) + '\n')
+    bot.send_message(chat_id, 'Username:   ' + str(resp['username']) + '\n'
+                                                                       'Groups:        ' + str(resp['groups']) + '\n'
+                                                                                                                 'First Name: ' + str(
+        resp['first_name']) + '\n'
+                              'Last Name: ' + str(resp['last_name']) + '\n'
+                                                                       'email:           ' + str(resp['email']) + '\n')
 
 
 @bot.message_handler(commands=['db_status'])
@@ -90,7 +97,7 @@ def createTable(message):
         """
          CREATE TABLE USERS (
             id INTEGER PRIMARY KEY,
-            name VARCHAR(255) NULL,
+            name VARCHAR(255) NOT NULL,
             last_name VARCHAR(255) NULL,
             lessons INTEGER
             REFERENCES LESSONS (id)
@@ -164,5 +171,51 @@ def handler_text(message):
     text = message.text
     print(text)
 
+
+@bot.message_handler(commands=['db_drop'])
+def createUser(message):
+    bot.send_message(message.chat.id,
+                     "Send me your name (and optional surname)(separate your inputs by space in format NAME SURNAME)")
+    bot.send_message(message.chat.id, "Example: \n Bob \n Bob Gray")
+    bot.register_next_step_handler(message, get_user_data)
+
+
+def get_user_data(message):
+    global user
+    user.setId(message.chat.id)
+    userData = transformUserData(message)
+    if len(userData) == 2:
+        command = (
+            """
+            INSERT INTO users (id, name) values (user.setId, userData)
+            """
+        )
+    elif len(userData) == 1:
+        command = (
+            """
+            INSERT INTO users (id, name, last_name) values (user.setId, userData[0], userData[1])
+            """
+        )
+    else:
+        bot.send_message(message.chat.id, "Wrong input")
+    try:
+        conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
+        cur = conn.cursor()
+        if checkIfTablesExists(conn, cur):
+            cur.execute(command)
+        else:
+            bot.send_message(message.chat.id, "Tables are not exist")
+        cur.close()
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        bot.send_message(message.chat.id, "Error: " + error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+def transformUserData(message):
+    data = message.text
+    return data.strip().split(" ")
 
 bot.polling()
