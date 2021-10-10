@@ -1,8 +1,10 @@
 import requests
 import telebot
 import urllib3
+import psycopg2
+import config
 
-BOT_TOKEN = '2016564802:AAEH1HNmHoJ2d4DBOP5FFAEdkEPfNJ4R3yw'
+BOT_TOKEN = '2016564802:AAEln-7Je6d0pc_abFREDypJBu9UpS4lS6M'
 
 bot = telebot.TeleBot(BOT_TOKEN)
 
@@ -47,8 +49,77 @@ def get_user_info(message):
                                 'Groups:        ' + str(resp['groups']) + '\n'
                                 'First Name: ' + str(resp['first_name']) + '\n'
                                 'Last Name: ' + str(resp['last_name']) + '\n'
-                                'email:           ' + str(resp['email']) + '\n'
-    )
+                                'email:           ' + str(resp['email']) + '\n')
+
+
+@bot.message_handler(commands=['DB'])
+def getTable(message):
+    chat_id = message.chat.id
+    conn = psycopg2.connect(dbname='database', user='db_user',
+                        password='mypassword', host='localhost')
+    bot.send_message(chat_id, "Enter what username do you want to check:")
+    bot.register_next_step_handler(message, get_user_info)
+    cursor = conn.cursor()
+
+
+@bot.message_handler(commands=['db_create'])
+def tableCreation(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Enter pass:")
+    bot.register_next_step_handler(message, checkAccess)
+
+
+def checkAccess(message):
+    chat_id = message.chat.id
+    print(message.text)
+    if message.text == 'asi23oa5nuiSU(NDSax':
+        bot.send_message(chat_id, "Enter table name:")
+        bot.register_next_step_handler(message, createTable)
+    else:
+        bot.send_message(chat_id, "Not correct pass:")
+
+
+def createTable(message):
+    def create_tables():
+        """ create tables in the PostgreSQL database"""
+        commands = (
+            """ 
+            CREATE TABLE LESSONS (
+                            id INTEGER  PRIMARY KEY,
+                            name VARCHAR(255) NOT NULL,
+                            time_str VARCHAR(255) NOT NULL,
+                            time_end VARCHAR(255) NOT NULL,
+                            )
+            """,
+            """
+            CREATE TABLE USERS (
+                id SERIAL PRIMARY KEY,
+                name VARCHAR(255) NULL,
+                2nd_name VARCHAR(255) NULL,
+                FOREIGN KEY (lessons)
+                REFERENCES LESSONS (name)
+                ON UPDATE CASCADE ON DELETE SET NULL
+            )
+            """)
+        conn = None
+        try:
+            # read the connection parameters
+            params = config()
+            # connect to the PostgreSQL server
+            conn = psycopg2.connect(**params)
+            cur = conn.cursor()
+            # create table one by one
+            for command in commands:
+                cur.execute(command)
+            # close communication with the PostgreSQL database server
+            cur.close()
+            # commit the changes
+            conn.commit()
+        except (Exception, psycopg2.DatabaseError) as error:
+            print(error)
+        finally:
+            if conn is not None:
+                conn.close()
 
 
 @bot.message_handler(content_types=['text'])
