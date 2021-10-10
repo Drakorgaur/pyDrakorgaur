@@ -249,11 +249,11 @@ def getUserInfo(message):
         cur.close()
         conn.commit()
         bot.send_message(message.chat.id,
-                         "Chat ID" + result[0] +
+                         "Chat ID" + str(result[0]) +
                          "\nUsername" + result[1] +
                          "\nName" + result[2] +
                          "\nLast Name" + result[3] +
-                         "\nLessons ID" + result[4]
+                         "\nLessons ID" + str(result[4])
                          )
         return result
     except (Exception, psycopg2.DatabaseError) as error:
