@@ -10,15 +10,12 @@ bot = telebot.TeleBot(BOT_TOKEN)
 user_dict = {}
 
 
-class User:
+class Info:
     def __init__(self, userId):
         self.userId = userId
 
     def setId(self, userId):
         self.userId = userId
-
-
-user = User(0)
 
 
 @bot.message_handler(commands=['db_status'])
@@ -140,6 +137,7 @@ def createTable(message):
         """
         CREATE TABLE LESSONS (
                         id INTEGER PRIMARY KEY,
+                        username VARCHAR(255) NOT NULL,
                         name VARCHAR(255) NOT NULL,
                         time_str VARCHAR(255) NOT NULL,
                         time_end VARCHAR(255) NOT NULL
@@ -195,18 +193,17 @@ def checkIfTablesExists(conn, cur):
 
 def get_user_data(message):
     chat_id = message.chat.id
-    user.setId(chat_id)
     userData = transformUserData(message)
     if len(userData) == 1:
         command = (
             """
-            INSERT INTO users (id, name) VALUES (%s, %s);
+            INSERT INTO users (id, username, name) VALUES (%s, %s, %s);
             """
         )
     elif len(userData) == 2:
         command = (
             """
-            INSERT INTO users (id, name, last_name) VALUES (%s, %s, %s);
+            INSERT INTO users (id, username, name, last_name) VALUES (%s, %s, %s, %s);
             """
         )
     else:
@@ -216,9 +213,9 @@ def get_user_data(message):
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
             if len(userData) == 1:
-                cur.execute(command, (chat_id, userData))
+                cur.execute(command, (chat_id, message.message.chat.username, userData))
             elif len(userData) == 2:
-                cur.execute(command, (chat_id, userData[0], userData[1]))
+                cur.execute(command, (chat_id, message.message.chat.username, userData[0], userData[1]))
         else:
             bot.send_message(message.chat.id, "Tables are not exist")
         cur.close()
@@ -239,7 +236,7 @@ def transformUserData(message):
 def getUserInfo(message):
     command = (
         """
-        SELECT * FROM USERS WHERE name = 'Mark';
+        SELECT * FROM USERS WHERE username = '%s';
         """
     )
     try:
@@ -247,7 +244,7 @@ def getUserInfo(message):
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
-            cur.execute(command)
+            cur.execute(command, message.text)
             result = cur.fetchone()
         else:
             bot.send_message(message.chat.id, "Tables are not exist")
