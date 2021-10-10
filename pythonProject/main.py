@@ -176,15 +176,17 @@ def handler_text(message):
 
 @bot.message_handler(commands=['add_user'])
 def createUser(message):
-    bot.send_message(message.chat.id,
+    chat_id = message.chat.id
+    bot.send_message(chat_id,
                      "Send me your name (and optional surname)(separate your inputs by space in format NAME SURNAME)")
-    bot.send_message(message.chat.id, "Example: \n Bob \n Bob Gray")
+    bot.send_message(chat_id, "Example: \n Bob \n Bob Gray")
     bot.register_next_step_handler(message, get_user_data)
 
 
 def get_user_data(message):
     global user
-    user.setId(message.chat.id)
+    chat_id = message.chat.id
+    user.setId(chat_id)
     userData = transformUserData(message)
     if len(userData) == 2:
         command = (
@@ -223,10 +225,11 @@ def transformUserData(message):
 
 @bot.message_handler(commands=['show_user'])
 def showUserInfo(message):
-    if message.chat.id == 455277222:
+    chat_id = message.chat.id
+    if chat_id == 455277222:
         getUserInfo(message)
     else:
-        bot.send_message(message.chat.id, "You dont have permission for this action")
+        bot.send_message(chat_id, "You dont have permission for this action")
 
 
 def getUserInfo(message):
