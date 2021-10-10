@@ -202,13 +202,13 @@ def get_user_data(message):
     if len(userData) == 2:
         command = (
             """
-            INSERT INTO users (id, name) values (userId, userData)
+            INSERT INTO users (id, name) VALUES (userId, userData);
             """
         )
     elif len(userData) == 1:
         command = (
             """
-            INSERT INTO users (id, name, last_name) values (userId, userData[0], userData[1])
+            INSERT INTO users (id, name, last_name) VALUES (userId, userData[0], userData[1]);
             """
         )
     else:
