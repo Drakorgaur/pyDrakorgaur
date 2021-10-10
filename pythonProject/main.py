@@ -21,6 +21,58 @@ class User:
 user = User(0)
 
 
+@bot.message_handler(commands=['db_status'])
+def getTable(message):
+    chat_id = message.chat.id
+    conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
+    cur = conn.cursor()
+    if checkIfTablesExists(conn, cur):
+        bot.send_message(message.chat.id, "Tables exist")
+    else:
+        bot.send_message(message.chat.id, "Tables don't exist")
+
+
+@bot.message_handler(commands=['db_create'])
+def tableCreation(message):
+    chat_id = message.chat.id
+    checkAccess(message)
+
+
+@bot.message_handler(commands=['db_drop'])
+def dropTables(message):
+    сommand = (
+        """
+        DROP TABLE IF EXISTS users;
+        DROP TABLE IF EXISTS lessons;
+        """
+    )
+    try:
+        conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
+        cur = conn.cursor()
+        if message.chat.id == 455277222:
+            cur.execute(сommand)
+        else:
+            bot.send_message(message.chat.id, "You dont have permission for this action")
+        cur.close()
+        conn.commit()
+        bot.send_message(message.chat.id, "Tables was successfully deleted")
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error was: ")
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+@bot.message_handler(commands=['add_user'])
+def createUser(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id,
+                     "Send me your name (and optional surname)(separate your inputs by space in format NAME SURNAME)")
+    bot.send_message(chat_id, "Example: \n Bob \n Bob Gray")
+    bot.register_next_step_handler(message, get_user_data)
+
+
 @bot.message_handler(commands=['show_user'])
 def showUserInfo(message):
     chat_id = message.chat.id
@@ -54,6 +106,12 @@ def user_info_handler(message):
     bot.register_next_step_handler(message, get_user_info)
 
 
+@bot.message_handler(content_types=['text'])
+def handler_text(message):
+    text = message.text
+    print(text)
+
+
 def get_user_info(message):
     chat_id = message.chat.id
     print(message.text)
@@ -66,23 +124,6 @@ def get_user_info(message):
         resp['first_name']) + '\n'
                               'Last Name: ' + str(resp['last_name']) + '\n'
                                                                        'email:           ' + str(resp['email']) + '\n')
-
-
-@bot.message_handler(commands=['db_status'])
-def getTable(message):
-    chat_id = message.chat.id
-    conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
-    cur = conn.cursor()
-    if checkIfTablesExists(conn, cur):
-        bot.send_message(message.chat.id, "Tables exist")
-    else:
-        bot.send_message(message.chat.id, "Tables don't exist")
-
-
-@bot.message_handler(commands=['db_create'])
-def tableCreation(message):
-    chat_id = message.chat.id
-    checkAccess(message)
 
 
 def checkAccess(message):
@@ -151,46 +192,6 @@ def checkIfTablesExists(conn, cur):
 
     return boolean[0]
 
-
-@bot.message_handler(commands=['db_drop'])
-def dropTables(message):
-    сommand = (
-        """
-        DROP TABLE IF EXISTS users;
-        DROP TABLE IF EXISTS lessons;
-        """
-    )
-    try:
-        conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
-        cur = conn.cursor()
-        if message.chat.id == 455277222:
-            cur.execute(сommand)
-        else:
-            bot.send_message(message.chat.id, "You dont have permission for this action")
-        cur.close()
-        conn.commit()
-        bot.send_message(message.chat.id, "Tables was successfully deleted")
-    except (Exception, psycopg2.DatabaseError) as error:
-        print("Error was: ")
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-
-
-@bot.message_handler(content_types=['text'])
-def handler_text(message):
-    text = message.text
-    print(text)
-
-
-@bot.message_handler(commands=['add_user'])
-def createUser(message):
-    chat_id = message.chat.id
-    bot.send_message(chat_id,
-                     "Send me your name (and optional surname)(separate your inputs by space in format NAME SURNAME)")
-    bot.send_message(chat_id, "Example: \n Bob \n Bob Gray")
-    bot.register_next_step_handler(message, get_user_data)
 
 
 def get_user_data(message):
