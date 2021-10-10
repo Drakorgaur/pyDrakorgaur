@@ -69,7 +69,7 @@ def tableCreation(message):
 def checkAccess(message):
     chat_id = message.chat.id
     bot.send_message(chat_id, chat_id)
-    if message.chat.id == '455277222':
+    if message.chat.id == 455277222:
         createTable(message)
     else:
         bot.send_message(chat_id, "You dont have permission for this action")
