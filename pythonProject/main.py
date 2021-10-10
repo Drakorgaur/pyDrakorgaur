@@ -2,7 +2,7 @@ import requests
 import telebot
 import urllib3
 import psycopg2
-import config
+from config import config
 
 BOT_TOKEN = '2016564802:AAEln-7Je6d0pc_abFREDypJBu9UpS4lS6M'
 
