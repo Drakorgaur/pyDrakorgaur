@@ -69,10 +69,10 @@ def tableCreation(message):
 def checkAccess(message):
     chat_id = message.chat.id
     bot.send_message(chat_id, chat_id)
-    #if message.text == 'asi23oa5nuiSU(NDSax':
-    createTable(message)
-    #else:
-    #    bot.send_message(chat_id, "Not correct pass:")
+    if message.chat.id == '455277222':
+        createTable(message)
+    else:
+        bot.send_message(chat_id, "You dont have permission for this action")
 
 
 def createTable(message):
@@ -145,7 +145,7 @@ def dropTables(message):
         cur.execute(сommand)
         cur.close()
         conn.commit()
-        bot.send_message(message.chat_id, "Tables was successfully deleted")
+        bot.send_message(message.chat.id, "Tables was successfully deleted")
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
         print(error)
