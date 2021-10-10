@@ -55,8 +55,7 @@ def get_user_info(message):
 @bot.message_handler(commands=['DB'])
 def getTable(message):
     chat_id = message.chat.id
-    conn = psycopg2.connect(dbname='database', user='db_user',
-                        password='mypassword', host='localhost')
+    conn = psycopg2.connect(dbname='testtable', user='remar', password='admin', host='localhost', port='5432')
     bot.send_message(chat_id, "Enter what username do you want to check:")
     bot.register_next_step_handler(message, get_user_info)
     cursor = conn.cursor()
