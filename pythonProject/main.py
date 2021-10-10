@@ -2,7 +2,6 @@ import requests
 import telebot
 import urllib3
 import psycopg2
-from config import config
 
 BOT_TOKEN = '2016564802:AAEln-7Je6d0pc_abFREDypJBu9UpS4lS6M'
 
@@ -102,7 +101,6 @@ def createTable(message):
     try:
         # read the connection parameters:
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
-        params = config()
         cur = conn.cursor()
         # create table one by one
         for command in commands:
