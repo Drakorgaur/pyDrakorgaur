@@ -77,7 +77,7 @@ def createUser(message):
 def showUserInfo(message):
     chat_id = message.chat.id
     if chat_id == 455277222:
-        bot.send_message(chat_id, "You have permission for this action")
+        bot.send_message(chat_id, "What user do you want me to show?")
         getUserInfo(message)
     else:
         bot.send_message(chat_id, "You dont have permission for this action")
@@ -239,7 +239,7 @@ def transformUserData(message):
 def getUserInfo(message):
     command = (
         """
-        SELECT * FROM users WHERE name = 'Mark'
+        SELECT * FROM USERS WHERE name = 'Mark';
         """
     )
     try:
