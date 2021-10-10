@@ -98,7 +98,6 @@ def status_handler(message):
 @bot.message_handler(commands=['user.info'])
 def user_info_handler(message):
     chat_id = message.chat.id
-    print(message.text)
     bot.send_message(chat_id, "Enter what username do you want to check:")
     bot.register_next_step_handler(message, get_user_info)
 
@@ -111,7 +110,6 @@ def handler_text(message):
 
 def get_user_info(message):
     chat_id = message.chat.id
-    print(message.text)
     response = requests.get('http://barzali.com/api/user/' + message.text + '/')
     resp = response.json()
     bot.send_message(chat_id, 'there')
@@ -125,9 +123,9 @@ def get_user_info(message):
 
 def checkAccess(message):
     chat_id = message.chat.id
-    bot.send_message(chat_id, chat_id)
     if message.chat.id == 455277222:
         createTable(message)
+        bot.send_message(chat_id, "Tables was created")
     else:
         bot.send_message(chat_id, "You dont have permission for this action")
 
@@ -250,7 +248,7 @@ def getUserInfo(message):
             bot.send_message(message.chat.id, "Tables are not exist")
         cur.close()
         conn.commit()
-        print(result)
+        bot.send_message(message.chat.id, result)
         return result
     except (Exception, psycopg2.DatabaseError) as error:
         bot.send_message(message.chat.id, "Error: ")
