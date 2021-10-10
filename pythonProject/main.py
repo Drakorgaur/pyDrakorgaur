@@ -137,7 +137,6 @@ def createTable(message):
         """
         CREATE TABLE LESSONS (
                         id INTEGER PRIMARY KEY,
-                        username VARCHAR(255) NOT NULL,
                         name VARCHAR(255) NOT NULL,
                         time_str VARCHAR(255) NOT NULL,
                         time_end VARCHAR(255) NOT NULL
@@ -146,6 +145,7 @@ def createTable(message):
         """
          CREATE TABLE USERS (
             id INTEGER PRIMARY KEY,
+            username VARCHAR(255) NOT NULL,
             name VARCHAR(255) NOT NULL,
             last_name VARCHAR(255) NULL,
             lessons INTEGER
