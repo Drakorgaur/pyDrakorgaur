@@ -78,7 +78,6 @@ def checkAccess(message):
 
 
 def createTable(message):
-    """ create tables in the PostgreSQL database"""
     commands = (
         """
         CREATE TABLE LESSONS (
@@ -90,7 +89,7 @@ def createTable(message):
         """,
         """
          CREATE TABLE USERS (
-            id SERIAL PRIMARY KEY,
+            id INTEGER PRIMARY KEY,
             name VARCHAR(255) NULL,
             last_name VARCHAR(255) NULL,
             lessons INTEGER
@@ -99,15 +98,14 @@ def createTable(message):
         )
         """)
     try:
-        # read the connection parameters:
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
-        # create table one by one
-        for command in commands:
-            cur.execute(command)
-        # close communication with the PostgreSQL database server
+        if checkIfTablesExists(conn, cur):
+            for command in commands:
+                cur.execute(command)
+        else:
+            print("Tables already exist")
         cur.close()
-        # commit the changes
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
@@ -115,6 +113,29 @@ def createTable(message):
     finally:
         if conn is not None:
             conn.close()
+
+
+def checkIfTablesExists(conn, cur):
+    command = (
+        """
+        SELECT EXISTS (
+            SELECT *
+            FROM information_schema.tables 
+            WHERE  table_schema = 'schema_name'
+            AND    table_name   = 'table_name'
+            );
+        """)
+    try:
+        cur.execute(command)
+        cur.close()
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error was: ")
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
 
 
 @bot.message_handler(content_types=['text'])
