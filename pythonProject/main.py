@@ -248,7 +248,13 @@ def getUserInfo(message):
             bot.send_message(message.chat.id, "Tables are not exist")
         cur.close()
         conn.commit()
-        bot.send_message(message.chat.id, result)
+        bot.send_message(message.chat.id,
+                         "Chat ID" + result[0] +
+                         "\nUsername" + result[1] +
+                         "\nName" + result[2] +
+                         "\nLast Name" + result[3] +
+                         "\nLessons ID" + result[4]
+                         )
         return result
     except (Exception, psycopg2.DatabaseError) as error:
         bot.send_message(message.chat.id, "Error: ")
