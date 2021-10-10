@@ -108,10 +108,10 @@ def createTable(message):
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
+            bot.send_message(message.chat.id, "Tables already exist")
+        else:
             for command in commands:
                 cur.execute(command)
-        else:
-            bot.send_message(message.chat.id, "Tables already exist")
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
