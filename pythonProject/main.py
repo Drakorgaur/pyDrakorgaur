@@ -134,7 +134,7 @@ def checkIfTablesExists(conn, cur):
         """)
     try:
         cur.execute(command)
-        boolean = cur.fetchone
+        boolean = cur.fetchone()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
