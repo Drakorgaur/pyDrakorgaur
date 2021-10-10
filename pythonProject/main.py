@@ -93,7 +93,7 @@ def createTable(message):
             id SERIAL PRIMARY KEY,
             name VARCHAR(255) NULL,
             last_name VARCHAR(255) NULL,
-            FOREIGN KEY (lessons)
+            FOREIGN KEY (LESSONS)
             REFERENCES LESSONS (name)
             ON UPDATE CASCADE ON DELETE SET NULL
         )
