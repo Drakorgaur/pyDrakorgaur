@@ -234,6 +234,8 @@ def transformUserData(message):
 
 
 def getUserInfo(message):
+    username = message.text
+    bot.send_message(message.chat.id, username)
     command = (
         """
         SELECT * FROM USERS WHERE username = '%s';
@@ -244,7 +246,7 @@ def getUserInfo(message):
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
-            cur.execute(command, message.text)
+            cur.execute(command, username)
             result = cur.fetchone()
         else:
             bot.send_message(message.chat.id, "Tables are not exist")
