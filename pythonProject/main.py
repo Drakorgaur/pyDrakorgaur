@@ -100,12 +100,10 @@ def createTable(message):
                 ON UPDATE CASCADE ON DELETE SET NULL
             )
             """)
-        conn = None
         try:
-            # read the connection parameters
+            # read the connection parameters:
+            conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
             params = config()
-            # connect to the PostgreSQL server
-            conn = psycopg2.connect(**params)
             cur = conn.cursor()
             # create table one by one
             for command in commands:
