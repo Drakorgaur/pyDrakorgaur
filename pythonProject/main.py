@@ -139,8 +139,8 @@ def checkIfTablesExists(conn, cur):
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
         print(error)
-    print(boolean)
-    return boolean
+    print(boolean.replace("(", "").replace(")", "").replace(",", ""))
+    return boolean.replace("(", "").replace(")", "").replace(",", "")
 
 
 @bot.message_handler(commands=['db_drop'])
