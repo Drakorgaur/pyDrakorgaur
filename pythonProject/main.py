@@ -253,7 +253,8 @@ def getUserInfo(message):
         print(result)
         return result
     except (Exception, psycopg2.DatabaseError) as error:
-        bot.send_message(message.chat.id, "Error: " + error)
+        bot.send_message(message.chat.id, "Error: ")
+        bot.send_message(message.chat.id, error)
     finally:
         if conn is not None:
             conn.close()
