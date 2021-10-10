@@ -139,7 +139,7 @@ def checkIfTablesExists(conn, cur):
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
         print(error)
-    boolean = ''.join(boolean)
+    print(type(boolean))
     print(boolean)
     return boolean
 
