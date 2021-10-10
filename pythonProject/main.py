@@ -64,17 +64,16 @@ def getTable(message):
 def tableCreation(message):
     chat_id = message.chat.id
     bot.send_message(chat_id, "Enter pass:")
-    bot.register_next_step_handler(message, checkAccess)
+    checkAccess(message)
 
 
 def checkAccess(message):
     chat_id = message.chat.id
-    print(message.text)
-    if message.text == 'asi23oa5nuiSU(NDSax':
-        bot.send_message(chat_id, "Enter table name:")
-        bot.register_next_step_handler(message, createTable)
-    else:
-        bot.send_message(chat_id, "Not correct pass:")
+    print(chat_id)
+    #if message.text == 'asi23oa5nuiSU(NDSax':
+    createTable(message)
+    #else:
+    #    bot.send_message(chat_id, "Not correct pass:")
 
 
 def createTable(message):
@@ -104,7 +103,7 @@ def createTable(message):
             for command in commands:
                 cur.execute(command)
         else:
-            print("Tables already exist")
+            bot.send_message(message.chat_id, "Tables already exist")
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -127,15 +126,33 @@ def checkIfTablesExists(conn, cur):
         """)
     try:
         cur.execute(command)
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error was: ")
+        print(error)
+
+
+@bot.message_handler(commands=['db_drop'])
+def dropTables(message):
+    сommand = (
+        """
+        DROP TABLE IF EXISTS users;
+        DROP TABLE IF EXISTS lessons;
+        """
+    )
+    try:
+        conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
+        cur = conn.cursor()
+        cur.execute(сommand)
         cur.close()
         conn.commit()
+        bot.send_message(message.chat_id, "Tables was successfully deleted")
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
         print(error)
     finally:
         if conn is not None:
             conn.close()
-
 
 
 @bot.message_handler(content_types=['text'])
