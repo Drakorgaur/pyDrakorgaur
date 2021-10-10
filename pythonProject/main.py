@@ -174,7 +174,7 @@ def handler_text(message):
     print(text)
 
 
-@bot.message_handler(commands=['addUser'])
+@bot.message_handler(commands=['add_user'])
 def createUser(message):
     bot.send_message(message.chat.id,
                      "Send me your name (and optional surname)(separate your inputs by space in format NAME SURNAME)")
@@ -221,7 +221,7 @@ def transformUserData(message):
     return data.strip().split(" ")
 
 
-@bot.message_handler(commands=['showUser'])
+@bot.message_handler(commands=['show_user'])
 def showUserInfo(message):
     if message.chat.id == 455277222:
         getUserInfo(message)
