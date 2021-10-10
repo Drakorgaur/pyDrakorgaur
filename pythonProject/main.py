@@ -193,7 +193,6 @@ def checkIfTablesExists(conn, cur):
     return boolean[0]
 
 
-
 def get_user_data(message):
     global user
     chat_id = message.chat.id
@@ -223,7 +222,8 @@ def get_user_data(message):
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
-        bot.send_message(message.chat.id, "Error: " + error)
+        bot.send_message(message.chat.id, "Error: ")
+        bot.send_message(message.chat.id, error)
     finally:
         if conn is not None:
             conn.close()
