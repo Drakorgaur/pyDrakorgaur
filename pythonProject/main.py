@@ -174,7 +174,7 @@ def handler_text(message):
     print(text)
 
 
-@bot.message_handler(commands=['db_drop'])
+@bot.message_handler(commands=['addUser'])
 def createUser(message):
     bot.send_message(message.chat.id,
                      "Send me your name (and optional surname)(separate your inputs by space in format NAME SURNAME)")
@@ -219,5 +219,39 @@ def get_user_data(message):
 def transformUserData(message):
     data = message.text
     return data.strip().split(" ")
+
+
+@bot.message_handler(commands=['showUser'])
+def showUserInfo(message):
+    if message.chat.id == 455277222:
+        getUserInfo(message)
+    else:
+        bot.send_message(message.chat.id, "You dont have permission for this action")
+
+
+def getUserInfo(message):
+    command = (
+        """
+        SELECT * FROM users WHERE name = 'Mark'
+        """
+    )
+    try:
+        conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
+        cur = conn.cursor()
+        if checkIfTablesExists(conn, cur):
+            result = cur.execute(command)
+            result = cur.fetchone()
+        else:
+            bot.send_message(message.chat.id, "Tables are not exist")
+        cur.close()
+        conn.commit()
+        print(result)
+        return result
+    except (Exception, psycopg2.DatabaseError) as error:
+        bot.send_message(message.chat.id, "Error: " + error)
+    finally:
+        if conn is not None:
+            conn.close()
+
 
 bot.polling()
