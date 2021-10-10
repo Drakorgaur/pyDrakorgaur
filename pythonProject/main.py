@@ -80,7 +80,7 @@ def checkAccess(message):
 def createTable(message):
     """ create tables in the PostgreSQL database"""
     commands = (
-        """ 
+        """
         CREATE TABLE LESSONS (
                         id INTEGER  PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
@@ -89,11 +89,11 @@ def createTable(message):
                         )
         """,
         """
-        CREATE TABLE USERS (
+         CREATE TABLE USERS (
             id SERIAL PRIMARY KEY,
             name VARCHAR(255) NULL,
             last_name VARCHAR(255) NULL,
-            FOREIGN KEY (LESSONS)
+            lessons VARCHAR(255)
             REFERENCES LESSONS (name)
             ON UPDATE CASCADE ON DELETE SET NULL
         )
