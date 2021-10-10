@@ -123,21 +123,23 @@ def createTable(message):
 
 
 def checkIfTablesExists(conn, cur):
+    boolean = False
     command = (
         """
         SELECT EXISTS (
             SELECT *
             FROM information_schema.tables 
-            WHERE  table_schema = 'schema_name'
-            AND    table_name   = 'table_name'
+            AND    table_name   = 'users'
             );
         """)
     try:
-        cur.execute(command)
+        boolean = cur.execute(command)
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
         print(error)
+
+    return boolean
 
 
 @bot.message_handler(commands=['db_drop'])
