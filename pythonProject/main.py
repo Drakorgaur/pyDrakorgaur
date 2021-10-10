@@ -66,7 +66,7 @@ def getTable(message):
     if checkIfTablesExists(conn, cur):
         bot.send_message(message.chat.id, "Tables exist")
     else:
-        bot.send_message(message.chat.id, "Tables not exist")
+        bot.send_message(message.chat.id, "Tables don't exist")
 
 
 @bot.message_handler(commands=['db_create'])
@@ -138,7 +138,7 @@ def checkIfTablesExists(conn, cur):
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
         print(error)
-
+    print(boolean)
     return boolean
 
 
