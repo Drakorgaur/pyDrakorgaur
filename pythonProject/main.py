@@ -194,8 +194,6 @@ def checkIfTablesExists(conn, cur):
 
 
 def get_user_data(message):
-    global user
-    userId = user.userId
     chat_id = message.chat.id
     user.setId(chat_id)
     userData = transformUserData(message)
@@ -218,9 +216,9 @@ def get_user_data(message):
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
             if len(userData) == 1:
-                cur.execute(command, (userId, userData))
+                cur.execute(command, (chat_id, userData))
             elif len(userData) == 2:
-                cur.execute(command, (userId, userData[0], userData[1]))
+                cur.execute(command, (chat_id, userData[0], userData[1]))
         else:
             bot.send_message(message.chat.id, "Tables are not exist")
         cur.close()
