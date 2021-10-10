@@ -133,13 +133,13 @@ def checkIfTablesExists(conn, cur):
         """)
     try:
         cur.execute(command)
-        cur.fetchone()
+        boolean = cur.fetchone()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
         print(error)
 
-    return (cur.fetchone())[0]
+    return boolean[0]
 
 
 @bot.message_handler(commands=['db_drop'])
