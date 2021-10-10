@@ -75,7 +75,7 @@ def showUserInfo(message):
     chat_id = message.chat.id
     if chat_id == 455277222:
         bot.send_message(chat_id, "What user do you want me to show?")
-        getUserInfo(message)
+        bot.register_next_step_handler(message, getUserInfo)
     else:
         bot.send_message(chat_id, "You dont have permission for this action")
 
