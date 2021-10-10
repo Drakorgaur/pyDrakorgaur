@@ -82,7 +82,7 @@ def createTable(message):
     commands = (
         """
         CREATE TABLE LESSONS (
-                        id INTEGER  PRIMARY KEY,
+                        id INTEGER PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         time_str VARCHAR(255) NOT NULL,
                         time_end VARCHAR(255) NOT NULL
@@ -94,7 +94,7 @@ def createTable(message):
             name VARCHAR(255) NULL,
             last_name VARCHAR(255) NULL,
             lessons VARCHAR(255)
-            REFERENCES LESSONS (name)
+            REFERENCES LESSONS (id)
             ON UPDATE CASCADE ON DELETE SET NULL
         )
         """)
