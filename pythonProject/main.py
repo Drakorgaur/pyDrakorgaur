@@ -129,7 +129,7 @@ def checkIfTablesExists(conn, cur):
         SELECT EXISTS (
             SELECT *
             FROM information_schema.tables 
-            AND    table_name   = 'users'
+            WHERE    table_name   = 'users'
             );
         """)
     try:
