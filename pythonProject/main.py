@@ -85,7 +85,7 @@ def createTable(message):
                         id INTEGER  PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         time_str VARCHAR(255) NOT NULL,
-                        time_end VARCHAR(255) NOT NULL,
+                        time_end VARCHAR(255) NOT NULL
                         )
         """,
         """
