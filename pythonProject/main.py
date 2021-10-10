@@ -236,7 +236,7 @@ def transformUserData(message):
 def getUserInfo(message):
     command = (
         """
-        SELECT * FROM USERS WHERE username = %s;
+        SELECT * FROM USERS WHERE username = (%s);
         """
     )
     try:
