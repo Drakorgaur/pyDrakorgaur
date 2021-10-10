@@ -79,44 +79,43 @@ def checkAccess(message):
 
 
 def createTable(message):
-    def create_tables():
-        """ create tables in the PostgreSQL database"""
-        commands = (
-            """ 
-            CREATE TABLE LESSONS (
-                            id INTEGER  PRIMARY KEY,
-                            name VARCHAR(255) NOT NULL,
-                            time_str VARCHAR(255) NOT NULL,
-                            time_end VARCHAR(255) NOT NULL,
-                            )
-            """,
-            """
-            CREATE TABLE USERS (
-                id SERIAL PRIMARY KEY,
-                name VARCHAR(255) NULL,
-                2nd_name VARCHAR(255) NULL,
-                FOREIGN KEY (lessons)
-                REFERENCES LESSONS (name)
-                ON UPDATE CASCADE ON DELETE SET NULL
-            )
-            """)
-        try:
-            # read the connection parameters:
-            conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
-            params = config()
-            cur = conn.cursor()
-            # create table one by one
-            for command in commands:
-                cur.execute(command)
-            # close communication with the PostgreSQL database server
-            cur.close()
-            # commit the changes
-            conn.commit()
-        except (Exception, psycopg2.DatabaseError) as error:
-            print(error)
-        finally:
-            if conn is not None:
-                conn.close()
+    """ create tables in the PostgreSQL database"""
+    commands = (
+        """ 
+        CREATE TABLE LESSONS (
+                        id INTEGER  PRIMARY KEY,
+                        name VARCHAR(255) NOT NULL,
+                        time_str VARCHAR(255) NOT NULL,
+                        time_end VARCHAR(255) NOT NULL,
+                        )
+        """,
+        """
+        CREATE TABLE USERS (
+            id SERIAL PRIMARY KEY,
+            name VARCHAR(255) NULL,
+            2nd_name VARCHAR(255) NULL,
+            FOREIGN KEY (lessons)
+            REFERENCES LESSONS (name)
+            ON UPDATE CASCADE ON DELETE SET NULL
+        )
+        """)
+    try:
+        # read the connection parameters:
+        conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
+        params = config()
+        cur = conn.cursor()
+        # create table one by one
+        for command in commands:
+            cur.execute(command)
+        # close communication with the PostgreSQL database server
+        cur.close()
+        # commit the changes
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
 
 
 @bot.message_handler(content_types=['text'])
