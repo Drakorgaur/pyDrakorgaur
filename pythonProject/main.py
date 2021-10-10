@@ -92,7 +92,7 @@ def createTable(message):
         CREATE TABLE USERS (
             id SERIAL PRIMARY KEY,
             name VARCHAR(255) NULL,
-            2nd_name VARCHAR(255) NULL,
+            last_name VARCHAR(255) NULL,
             FOREIGN KEY (lessons)
             REFERENCES LESSONS (name)
             ON UPDATE CASCADE ON DELETE SET NULL
