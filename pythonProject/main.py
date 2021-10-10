@@ -107,7 +107,7 @@ def createTable(message):
     try:
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
-        if checkIfTablesExists(conn, cur):
+        if checkIfTablesExists(conn, cur) == "True":
             for command in commands:
                 cur.execute(command)
         else:
@@ -123,7 +123,6 @@ def createTable(message):
 
 
 def checkIfTablesExists(conn, cur):
-    boolean = False
     command = (
         """
         SELECT EXISTS (
@@ -140,7 +139,7 @@ def checkIfTablesExists(conn, cur):
         print("Error was: ")
         print(error)
     boolean = ''.join(str(boolean))
-    print(type(boolean))
+    print(boolean)
     return boolean
 
 
