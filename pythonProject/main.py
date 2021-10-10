@@ -21,6 +21,16 @@ class User:
 user = User(0)
 
 
+@bot.message_handler(commands=['show_user'])
+def showUserInfo(message):
+    chat_id = message.chat.id
+    if chat_id == 455277222:
+        bot.send_message(chat_id, "You have permission for this action")
+        getUserInfo(message)
+    else:
+        bot.send_message(chat_id, "You dont have permission for this action")
+
+
 @bot.message_handler(commands=['status'])
 def status_handler(message):
     chat_id = message.chat.id
@@ -223,15 +233,6 @@ def transformUserData(message):
     return data.strip().split(" ")
 
 
-@bot.message_handler(commands=['show_user'])
-def showUserInfo(message):
-    chat_id = message.chat.id
-    if chat_id == 455277222:
-        getUserInfo(message)
-    else:
-        bot.send_message(chat_id, "You dont have permission for this action")
-
-
 def getUserInfo(message):
     command = (
         """
@@ -239,10 +240,11 @@ def getUserInfo(message):
         """
     )
     try:
+        result = 0
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
-            result = cur.execute(command)
+            cur.execute(command)
             result = cur.fetchone()
         else:
             bot.send_message(message.chat.id, "Tables are not exist")
