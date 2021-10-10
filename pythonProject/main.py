@@ -107,7 +107,7 @@ def createTable(message):
     try:
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
-        if checkIfTablesExists(conn, cur) == "True":
+        if checkIfTablesExists(conn, cur):
             for command in commands:
                 cur.execute(command)
         else:
@@ -133,14 +133,13 @@ def checkIfTablesExists(conn, cur):
         """)
     try:
         cur.execute(command)
-        boolean = cur.fetchone()
+        cur.fetchone()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
         print(error)
-    boolean = ''.join(str(boolean))
-    print(boolean)
-    return boolean
+
+    return (cur.fetchone())[0]
 
 
 @bot.message_handler(commands=['db_drop'])
