@@ -147,7 +147,7 @@ def createTable(message):
                         day VARCHAR(255) NOT NULL,
                         time_str VARCHAR(255) NOT NULL,
                         time_end VARCHAR(255) NOT NULL
-                        )
+                        );
         """,
         """
          CREATE TABLE USERS (
@@ -158,7 +158,7 @@ def createTable(message):
             lessons INTEGER
             REFERENCES LESSONS (id)
             ON UPDATE CASCADE ON DELETE SET NULL
-        )
+        );
         """)
     try:
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
@@ -182,16 +182,18 @@ def setLessonDatabase(message):
     # for (JSON.stringify(Object.assign({}, shedule)))
     insert = message.text
     insert = json.loads(json.dumps(insert))
+    bot.send_message(message.chat.id, insert)
     command = (
         """
-        INSERT INTO lessons (day, time_str, time_end, name, id) values (%s, %s, %s, %s, %s)
+        INSERT INTO lessons (day, time_str, time_end, name, id) values (%s, %s, %s, %s, %s);
         """
     )
     try:
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
-            cur.execute(command, (insert[0], insert[1], insert[2], insert[3], insert[4]))
+            for item in insert:
+                cur.execute(command, (insert[item][0], insert[item][1], insert[item][2], insert[item][3], insert[item][4]))
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
