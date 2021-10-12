@@ -368,7 +368,7 @@ def saveFile(message, dir, file_name):
             schedule = json.loads(file.read())
     elif file_name == message.chat.username:
         open(dir + '/' + message.chat.username + '/' + message.chat.username + '.json', 'wb').write(response.content)
-        with open(dir + '/' + file_name) as file:
+        with open(dir + '/' + message.chat.username + '/' + message.chat.username + '.json') as file:
             schedule = json.loads(file.read())
     return schedule
 
