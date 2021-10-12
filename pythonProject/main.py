@@ -252,6 +252,7 @@ def get_user_data(message):
     userData = transformUserData(message)
     try:
         os.mkdir(os.path.join('users/',  message.chat.username))
+        os.chmod('users/' + message.chat.username, 0o0777)
     except OSError as error:
         pass
     if len(userData) == 1:
