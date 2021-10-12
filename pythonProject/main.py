@@ -24,11 +24,12 @@ class Help:
 Help = Help('0')
 
 
-@bot.message_handler(commands=['set_schedule'], content_types='document')
+@bot.message_handler(commands=['add_schedule'])
 def downloadDoc(message):
     chat_id = message.chat.id
     #f = json.open('schledule (5).json')
-    bot.send_message(chat_id, message.document.file_id)
+    bot.send_message(chat_id, 'Send me json-format of your schedule')
+    bot.register_next_step_handler(message, add_user_schedule)
 
 
 @bot.message_handler(commands=['db_set'])
@@ -167,7 +168,7 @@ def createTable(message):
             username VARCHAR(255) NOT NULL,
             name VARCHAR(255) NOT NULL,
             last_name VARCHAR(255) NULL,
-            lessons INTEGER
+            lessons INTEGER[]
             REFERENCES LESSONS (id)
             ON UPDATE CASCADE ON DELETE SET NULL
         );
@@ -192,12 +193,9 @@ def createTable(message):
 
 def setLessonDatabase(message):
     # for (JSON.stringify(Object.assign({}, shedule)))
-    response = requests.get(T_API + 'getFile?file_id=' + message.document.file_id)
-    resp = response.json()
-    response = requests.get('https://api.telegram.org/file/bot' + BOT_TOKEN + '/' + resp['result']['file_path'], allow_redirects=True)
-    open('schedules/schedule.json', 'wb').write(response.content)
-    with open('schedules/schedule.json') as file:
-        schedule = json.loads(file.read())
+    dir = 'schedules'
+    file_name = 'schedule.json'
+    schedule = saveFile(message, dir, file_name)
 
 
     command = (
@@ -215,7 +213,8 @@ def setLessonDatabase(message):
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
         print("Error was: ")
-        print(error)
+        if 'duplicate key value violates unique constraint "users_pkey"' in error:
+            print("User with this ID already exists")
     finally:
         if conn is not None:
             conn.close()
@@ -247,7 +246,7 @@ def get_user_data(message):
     try:
         os.mkdir(os.path.join('users/',  message.chat.username))
     except OSError as error:
-        bot.send_message(message.chat.id, error)
+        pass
     if len(userData) == 1:
         command = (
             """
@@ -319,5 +318,45 @@ def getUserInfo(message):
         if conn is not None:
             conn.close()
 
+
+def add_user_schedule(message):
+    chat_id = message.chat.id
+    directory = 'users'
+    file_name = message.chat.username
+    schedule = saveFile(message, directory, file_name)
+    command = (
+        """
+        INSERT INTO users (lessons) values (%s);
+        """
+    )
+    try:
+        conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
+        cur = conn.cursor()
+        if checkIfTablesExists(conn, cur):
+            schedule = ''
+            for item in schedule['indexes']:
+                for z in ['0|', '1|', '2|', '3|', '4|']:
+                    item = item.replace(z, '')
+                schedule = schedule + ', ' + item
+            cur.execute(command, (schedule[:-2],))
+        cur.close()
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error was: ")
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+def saveFile(message, dir, file_name):
+    response = requests.get(T_API + 'getFile?file_id=' + message.document.file_id)
+    resp = response.json()
+    response = requests.get('https://api.telegram.org/file/bot' + BOT_TOKEN + '/' + resp['result']['file_path'],
+                            allow_redirects=True)
+    open(dir + '/' + file_name, 'wb').write(response.content)
+    with open(dir + '/' + file_name) as file:
+        schedule = json.loads(file.read())
+    return schedule
 
 bot.polling()
