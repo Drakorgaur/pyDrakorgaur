@@ -345,8 +345,8 @@ def add_user_schedule(message):
             for item in schedule['indexes']:
                 for z in ['0|', '1|', '2|', '3|', '4|']:
                     item = item.replace(z, '')
-                bd_schedule = bd_schedule + ', ' + int(item)
-            cur.execute(command, (int(bd_schedule[:-2]),))
+                bd_schedule = bd_schedule + str(item) + ', '
+            cur.execute(command, (bd_schedule[:-2]),)
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
