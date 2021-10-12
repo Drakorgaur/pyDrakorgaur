@@ -176,7 +176,7 @@ def createTable(message):
             user_id INTEGER,
             lessons_id INTEGER,
             PRIMARY KEY (user_id, lessons_id),
-            CONSTRAINT fk_users FOREIGN KEY(user_id) REFERENCES user(id),
+            CONSTRAINT fk_users FOREIGN KEY(user_id) REFERENCES users(id),
             CONSTRAINT fk_lessons FOREIGN KEY(lessons_id) REFERENCES lessons(id)
         );
         """)
