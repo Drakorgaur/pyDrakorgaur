@@ -345,7 +345,7 @@ def add_user_schedule(message):
             for item in schedule['indexes']:
                 for z in ['0|', '1|', '2|', '3|', '4|']:
                     item = item.replace(z, '')
-                schedule = schedule + ', ' + item
+                schedule = schedule + ', ' + int(item)
             cur.execute(command, (schedule[:-2],))
         cur.close()
         conn.commit()
