@@ -330,8 +330,8 @@ def getUserInfo(message):
 def add_user_schedule(message):
     chat_id = message.chat.id
     directory = 'users'
-    file_name = message.chat.username
-    schedule = saveFile(message, directory, file_name)
+    username_dir = message.chat.username
+    schedule = saveFile(message, directory, username_dir)
     command = (
         """
         INSERT INTO users (lessons) values (%s);
@@ -362,9 +362,14 @@ def saveFile(message, dir, file_name):
     resp = response.json()
     response = requests.get('https://api.telegram.org/file/bot' + BOT_TOKEN + '/' + resp['result']['file_path'],
                             allow_redirects=True)
-    open(dir + '/' + file_name, 'wb').write(response.content)
-    with open(dir + '/' + file_name) as file:
-        schedule = json.loads(file.read())
+    if file_name == 'schedule.json':
+        open(dir + '/' + file_name, 'wb').write(response.content)
+        with open(dir + '/' + file_name) as file:
+            schedule = json.loads(file.read())
+    elif file_name == message.chat.username:
+        open(dir + '/' + message.chat.username + '/' + message.chat.username + '.json', 'wb').write(response.content)
+        with open(dir + '/' + file_name) as file:
+            schedule = json.loads(file.read())
     return schedule
 
 bot.polling()
