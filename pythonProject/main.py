@@ -334,7 +334,7 @@ def add_user_schedule(message):
     schedule = saveFile(message, directory, username_dir)
     command = (
         """
-        INSERT INTO users (lessons) values (%s);
+        UPDATE users set lessons = (%s) WHERE id = (%S);
         """
     )
     try:
@@ -346,7 +346,7 @@ def add_user_schedule(message):
                 for z in ['0|', '1|', '2|', '3|', '4|']:
                     item = item.replace(z, '')
                 bd_schedule_array.append(int(item))
-            cur.execute(command, (bd_schedule_array,))
+            cur.execute(command, (bd_schedule_array, chat_id))
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
