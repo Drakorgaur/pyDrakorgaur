@@ -342,11 +342,14 @@ def add_user_schedule(message):
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
             bd_schedule = ''
+            bd_schedule_array = []
             for item in schedule['indexes']:
                 for z in ['0|', '1|', '2|', '3|', '4|']:
                     item = item.replace(z, '')
                 bd_schedule = bd_schedule + str(item) + ', '
-            cur.execute(command, (bd_schedule[:-2]),)
+                bd_schedule_array.append(item)
+            #cur.execute(command, (bd_schedule[:-2]),)
+            cur.execute(command, (bd_schedule_array,))
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
