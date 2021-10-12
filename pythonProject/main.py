@@ -341,12 +341,12 @@ def add_user_schedule(message):
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
-            schedule = ''
+            bd_schedule = ''
             for item in schedule['indexes']:
                 for z in ['0|', '1|', '2|', '3|', '4|']:
                     item = item.replace(z, '')
-                schedule = schedule + ', ' + int(item)
-            cur.execute(command, (schedule[:-2],))
+                bd_schedule = bd_schedule + ', ' + int(item)
+            cur.execute(command, (bd_schedule[:-2],))
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
