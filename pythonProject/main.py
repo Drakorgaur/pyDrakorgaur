@@ -1,6 +1,7 @@
 import requests
 import telebot
 import urllib3
+import json
 import psycopg2
 
 BOT_TOKEN = '2016564802:AAEln-7Je6d0pc_abFREDypJBu9UpS4lS6M'
@@ -16,6 +17,13 @@ class Info:
 
     def setId(self, userId):
         self.userId = userId
+
+
+@bot.message_handler(commands=['db_set'])
+def setLessonTable(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Send me json")
+    bot.register_next_step_handler(message, setLessonDatabase)
 
 
 @bot.message_handler(commands=['db_status'])
@@ -136,6 +144,7 @@ def createTable(message):
         CREATE TABLE LESSONS (
                         id INTEGER PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
+                        day VARCHAR(255) NOT NULL,
                         time_str VARCHAR(255) NOT NULL,
                         time_end VARCHAR(255) NOT NULL
                         )
@@ -159,6 +168,30 @@ def createTable(message):
         else:
             for command in commands:
                 cur.execute(command)
+        cur.close()
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print("Error was: ")
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
+
+def setLessonDatabase(message):
+    # for (JSON.stringify(Object.assign({}, shedule)))
+    insert = message.text
+    insert = json.loads(json.dumps(insert))
+    command = (
+        """
+        INSERT INTO lessons (day, time_str, time_end, name, id) values (%s, %s, %s, %s, %s)
+        """
+    )
+    try:
+        conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
+        cur = conn.cursor()
+        if checkIfTablesExists(conn, cur):
+            cur.execute(command, (insert[0], insert[1], insert[2], insert[3], insert[4]))
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -249,11 +282,11 @@ def getUserInfo(message):
         cur.close()
         conn.commit()
         bot.send_message(message.chat.id,
-                         "Chat ID" + str(result[0]) +
-                         "\nUsername" + result[1] +
-                         "\nName" + result[2] +
-                         "\nLast Name" + result[3] +
-                         "\nLessons ID" + str(result[4])
+                         "Chat ID  " + str(result[0]) +
+                         "\nUsername  " + result[1] +
+                         "\nName  " + result[2] +
+                         "\nLast Name  " + result[3] +
+                         "\nLessons ID  " + str(result[4])
                          )
         return result
     except (Exception, psycopg2.DatabaseError) as error:
