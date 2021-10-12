@@ -245,7 +245,7 @@ def get_user_data(message):
     chat_id = message.chat.id
     userData = transformUserData(message)
     try:
-        os.mkdir(os.path.join('/users/',  message.chat.username))
+        os.mkdir(os.path.join('users/',  message.chat.username))
     except OSError as error:
         bot.send_message(message.chat.id, error)
     if len(userData) == 1:
