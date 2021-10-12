@@ -154,7 +154,7 @@ def checkAccess(message):
 def createTable(message):
     commands = (
         """
-        CREATE TABLE LESSONS (
+        CREATE TABLE lessons (
                         id INTEGER PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         day VARCHAR(255) NOT NULL,
@@ -163,14 +163,21 @@ def createTable(message):
                         );
         """,
         """
-         CREATE TABLE USERS (
+         CREATE TABLE users (
             id INTEGER PRIMARY KEY,
             username VARCHAR(255) NOT NULL,
             name VARCHAR(255) NOT NULL,
             last_name VARCHAR(255) NULL,
             lessons INTEGER[]
-            REFERENCES LESSONS (id)
-            ON UPDATE CASCADE ON DELETE SET NULL
+        );
+        """,
+        """
+         CREATE TABLE user_lessons (
+            user_id INTEGER,
+            lessons_id INTEGER,
+            PRIMARY KEY (user_id, lessons_id)
+            CONSTRAINT fk_users FOREIGN KEY(user_id) REFERENCES user(id)
+            CONSTRAINT fk_lessons FOREIGN KEY(lessons_id) REFERENCES lessons(id)
         );
         """)
     try:
