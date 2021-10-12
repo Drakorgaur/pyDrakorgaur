@@ -3,26 +3,38 @@ import telebot
 import urllib3
 import json
 import psycopg2
+import os
+
 
 BOT_TOKEN = '2016564802:AAEln-7Je6d0pc_abFREDypJBu9UpS4lS6M'
 
 bot = telebot.TeleBot(BOT_TOKEN)
-
+T_API = 'https://api.telegram.org/bot' + BOT_TOKEN + '/'
 user_dict = {}
 
 
-class Info:
-    def __init__(self, userId):
-        self.userId = userId
+class Help:
+    def __init__(self, file_path=0):
+        self.file_path = file_path
 
-    def setId(self, userId):
-        self.userId = userId
+    def setFilePath(self, file_path):
+        self.file_path = file_path
+
+
+Help = Help('0')
+
+
+@bot.message_handler(commands=['set_schedule'], content_types='document')
+def downloadDoc(message):
+    chat_id = message.chat.id
+    #f = json.open('schledule (5).json')
+    bot.send_message(chat_id, message.document.file_id)
 
 
 @bot.message_handler(commands=['db_set'])
 def setLessonTable(message):
     chat_id = message.chat.id
-    bot.send_message(chat_id, "Send me json")
+    bot.send_message(chat_id, "Send me json file")
     bot.register_next_step_handler(message, setLessonDatabase)
 
 
@@ -180,9 +192,14 @@ def createTable(message):
 
 def setLessonDatabase(message):
     # for (JSON.stringify(Object.assign({}, shedule)))
-    insert = message.text
-    insert = json.loads(json.dumps(insert))
-    bot.send_message(message.chat.id, insert)
+    response = requests.get(T_API + 'getFile?file_id=' + message.document.file_id)
+    resp = response.json()
+    response = requests.get('https://api.telegram.org/file/bot' + BOT_TOKEN + '/' + resp['result']['file_path'], allow_redirects=True)
+    open('schedules/schedule.json', 'wb').write(response.content)
+    with open('schedules/schedule.json') as file:
+        schedule = json.loads(file.read())
+
+
     command = (
         """
         INSERT INTO lessons (day, time_str, time_end, name, id) values (%s, %s, %s, %s, %s);
@@ -192,8 +209,8 @@ def setLessonDatabase(message):
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
-            for item in insert:
-                cur.execute(command, (insert[item][0], insert[item][1], insert[item][2], insert[item][3], insert[item][4]))
+            for item in schedule:
+                cur.execute(command, (schedule[item][0], schedule[item][1], schedule[item][2], schedule[item][3], schedule[item][4]))
         cur.close()
         conn.commit()
     except (Exception, psycopg2.DatabaseError) as error:
@@ -227,6 +244,10 @@ def checkIfTablesExists(conn, cur):
 def get_user_data(message):
     chat_id = message.chat.id
     userData = transformUserData(message)
+    try:
+        os.mkdir('/users/' + message.chat.username)
+    except OSError as error:
+        bot.send_message(message.chat.id, error)
     if len(userData) == 1:
         command = (
             """
