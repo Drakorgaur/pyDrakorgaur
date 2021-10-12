@@ -44,7 +44,7 @@ def getTable(message):
     chat_id = message.chat.id
     conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
     cur = conn.cursor()
-            if checkIfTablesExists(conn, cur):
+    if checkIfTablesExists(conn, cur):
         bot.send_message(message.chat.id, "Tables exist")
     else:
         bot.send_message(message.chat.id, "Tables don't exist")
