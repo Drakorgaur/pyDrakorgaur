@@ -334,7 +334,7 @@ def add_user_schedule(message):
     schedule = saveFile(message, directory, username_dir)
     command = (
         """
-        UPDATE users set lessons = (%s) WHERE id = (%S);
+        UPDATE users set lessons = (%s) WHERE id = (%s);
         """
     )
     try:
