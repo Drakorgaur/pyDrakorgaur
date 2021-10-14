@@ -313,9 +313,11 @@ def getUserInfo(message):
             cur.execute(select, (message.text, ))
             result = cur.fetchone()
             result = list(result)
+            element = []
             for item in result[4]:
                 cur.execute(linker, (item,))
-                result.append(cur.fetchone())
+                element.append(cur.fetchone())
+            result.append(element)
         else:
             bot.send_message(message.chat.id, "Tables are not exist")
         cur.close()
@@ -328,7 +330,10 @@ def getUserInfo(message):
                          "\nLast Name  " + result[3] +
                          "\nLessons: " + str(result[4])
                          )
-        print(result)
+        for item in result:
+            bot.send_message(message.chat.id, '[' + item[1] + '] ' + item[0] + '    ' + item[2] + '-' + item[3])
+
+        print(result[5])
     except (Exception, psycopg2.DatabaseError) as error:
         bot.send_message(message.chat.id, "Error: ")
         bot.send_message(message.chat.id, error)
