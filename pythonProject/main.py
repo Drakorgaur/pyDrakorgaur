@@ -334,13 +334,11 @@ def getUserInfo(message):
         string = ''
         for day in result[5]:
             for lesson in result[5][day]:
-                temp_string = '['.join(lesson[3]), ']    '.join(lesson[1]), ' do '.join(lesson[2])
+                temp_string = '[' + lesson[0] + ']    ' + lesson[2] + ' do ' + lesson[3]
             string = string + '\n' + temp_string
-            bot.send_message(message.chat.id, '[' + ''.join(result[5][day]) + ']\n' +
+            bot.send_message(message.chat.id, '[' + result[5][day] + ']\n' +
                              string
                              )
-
-
     except (Exception, psycopg2.DatabaseError) as error:
         bot.send_message(message.chat.id, "Error: ")
         bot.send_message(message.chat.id, error)
