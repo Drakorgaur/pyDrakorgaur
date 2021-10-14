@@ -333,7 +333,7 @@ def getUserInfo(message):
                          )
         string = ''
         for item in result[5]:
-            for lesson in item:
+            for lesson in result[5][item]:
                 t = 1
                 temp_string = '[', lesson[3], ']    ' + lesson[1], ' do ', lesson[2]
             string = string + '\n' + temp_string
