@@ -402,7 +402,7 @@ def divide(lessons):
     for week_day in ["Monday", "Tuesday", 'Wednesday', 'Thursday', 'Friday']:
         concrete_day = []
         for lesson in lessons:
-            print(lesson[0])
+            print(lesson[1])
             if week_day == lesson[0]:
                 concrete_day.append(lesson)
         sorted_day[week_day] = concrete_day
