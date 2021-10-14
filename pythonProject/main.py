@@ -328,7 +328,7 @@ def getUserInfo(message):
                          "\nLast Name  " + result[3] +
                          "\nLessons: " + str(result[4])
                          )
-        bot.send_message(message.chat.id, result)
+        print(result)
     except (Exception, psycopg2.DatabaseError) as error:
         bot.send_message(message.chat.id, "Error: ")
         bot.send_message(message.chat.id, error)
