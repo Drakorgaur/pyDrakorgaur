@@ -341,7 +341,6 @@ def getUserInfo(message):
                              string
                              )
 
-        print(result[5])
 
     except (Exception, psycopg2.DatabaseError) as error:
         bot.send_message(message.chat.id, "Error: ")
@@ -402,8 +401,7 @@ def divide(lessons):
     for week_day in ["Monday", "Tuesday", 'Wednesday', 'Thursday', 'Friday']:
         concrete_day = []
         for lesson in lessons:
-            print(lesson[1])
-            if week_day == lesson[0]:
+            if week_day == lesson[1]:
                 concrete_day.append(lesson)
         sorted_day[week_day] = concrete_day
     print(sorted_day)
