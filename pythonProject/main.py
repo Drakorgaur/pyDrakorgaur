@@ -295,9 +295,14 @@ def transformUserData(message):
 
 
 def getUserInfo(message):
-    command = (
+    select = (
         """
         SELECT * FROM USERS WHERE username = (%s);
+        """
+    )
+    linker = (
+        """
+        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s);
         """
     )
     try:
@@ -305,20 +310,24 @@ def getUserInfo(message):
         conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
-            cur.execute(command, (message.text, ))
+            cur.execute(select, (message.text, ))
             result = cur.fetchone()
+            for item in result[4]:
+                cur.execute(linker, (item,))
+                result.append(cur.fetchone())
         else:
             bot.send_message(message.chat.id, "Tables are not exist")
         cur.close()
         conn.commit()
+
         bot.send_message(message.chat.id,
                          "Chat ID  " + str(result[0]) +
                          "\nUsername  " + result[1] +
                          "\nName  " + result[2] +
                          "\nLast Name  " + result[3] +
-                         "\nLessons ID  " + str(result[4])
+                         "\nLessons: " + str(result[4])
                          )
-        return result
+        bot.send_message(message.chat.id, result)
     except (Exception, psycopg2.DatabaseError) as error:
         bot.send_message(message.chat.id, "Error: ")
         bot.send_message(message.chat.id, error)
