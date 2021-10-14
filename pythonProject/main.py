@@ -330,7 +330,7 @@ def getUserInfo(message):
                          "\nLast Name  " + result[3] +
                          "\nLessons: " + str(result[4])
                          )
-        for item in result:
+        for item in result[5]:
             bot.send_message(message.chat.id, '[' + item[1] + '] ' + item[0] + '    ' + item[2] + '-' + item[3])
 
         print(result[5])
