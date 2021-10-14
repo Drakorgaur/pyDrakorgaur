@@ -332,12 +332,11 @@ def getUserInfo(message):
                          "\nLessons: " + str(result[4])
                          )
         string = ''
-        for item in result[5]:
-            for lesson in result[5][item]:
-                t = 1
-                temp_string = '[', lesson[3], ']    ' + lesson[1], ' do ', lesson[2]
+        for day in result[5]:
+            for lesson in result[5][day]:
+                temp_string = '['.join(lesson[3]), ']    '.join(lesson[1]), ' do '.join(lesson[2])
             string = string + '\n' + temp_string
-            bot.send_message(message.chat.id, '[' + result[5][item] + ']\n' +
+            bot.send_message(message.chat.id, '[' + ''.join(result[5][day]) + ']\n' +
                              string
                              )
 
