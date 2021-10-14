@@ -302,7 +302,7 @@ def getUserInfo(message):
     )
     linker = (
         """
-        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s);
+        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s) ORDER BY day ASC, time_str ASC;
         """
     )
     try:
@@ -318,6 +318,7 @@ def getUserInfo(message):
                 cur.execute(linker, (item,))
                 element.append(cur.fetchone())
             result.append(element)
+            result[5] = divide(result[5])
         else:
             bot.send_message(message.chat.id, "Tables are not exist")
         cur.close()
@@ -330,10 +331,18 @@ def getUserInfo(message):
                          "\nLast Name  " + result[3] +
                          "\nLessons: " + str(result[4])
                          )
+        string = ''
         for item in result[5]:
-            bot.send_message(message.chat.id, '[' + item[1] + '] ' + item[0] + '    ' + item[2] + '-' + item[3])
+            for lesson in item:
+                t = 1
+                temp_string = '[', lesson[3], ']    ' + lesson[1], ' do ', lesson[2]
+            string = string + '\n' + temp_string
+            bot.send_message(message.chat.id, '[' + result[5][item] + ']\n' +
+                             string
+                             )
 
         print(result[5])
+
     except (Exception, psycopg2.DatabaseError) as error:
         bot.send_message(message.chat.id, "Error: ")
         bot.send_message(message.chat.id, error)
@@ -386,6 +395,18 @@ def saveFile(message, dir, file_name):
         with open(dir + '/' + message.chat.username + '/' + message.chat.username + '.json') as file:
             schedule = json.loads(file.read())
     return schedule
+
+
+def divide(lessons):
+    sorted_day = {'Monday': None, 'Tuesday': None, 'Wednesday': None, 'Thursday': None, 'Friday': None}
+    for week_day in ["Monday", "Tuesday", 'Wednesday', 'Thursday', 'Friday']:
+        concrete_day = []
+        for lesson in lessons:
+            if week_day == lesson[0]:
+                concrete_day.append(lesson)
+        sorted_day[week_day] = concrete_day
+    print(sorted_day)
+    return sorted_day
 
 
 bot.infinity_polling()
