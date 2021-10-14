@@ -312,6 +312,7 @@ def getUserInfo(message):
         if checkIfTablesExists(conn, cur):
             cur.execute(select, (message.text, ))
             result = cur.fetchone()
+            result = list(result)
             for item in result[4]:
                 cur.execute(linker, (item,))
                 result.append(cur.fetchone())
@@ -381,4 +382,5 @@ def saveFile(message, dir, file_name):
             schedule = json.loads(file.read())
     return schedule
 
-bot.polling()
+
+bot.infinity_polling()
