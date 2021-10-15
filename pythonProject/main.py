@@ -332,7 +332,8 @@ def getUserInfo(message):
                          "\nLessons: " + str(result[4])
                          )
         for day in result[5]:
-            string = ''
+            string = '',
+            temp_string = '',
             for lesson in result[5][day]:
                 temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
             string = string + '\n' + str(temp_string)
