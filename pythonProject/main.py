@@ -300,9 +300,9 @@ def getUserInfo(message):
         SELECT * FROM USERS WHERE username = (%s);
         """
     )
-    linker = (
+    selector = (
         """
-        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s) ORDER BY day ASC, time_str ASC;
+        SELECT name, time_str, time_end  FROM lessons WHERE id = (%s) ORDER BY time_str ASC;
         """
     )
     try:
@@ -315,7 +315,7 @@ def getUserInfo(message):
             result = list(result)
             element = []
             for item in result[4]:
-                cur.execute(linker, (item,))
+                cur.execute(selector, (item,))
                 element.append(cur.fetchone())
             result.append(element)
             result[5] = divide(result[5])
