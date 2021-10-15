@@ -277,8 +277,10 @@ def get_user_data(message):
         cur = conn.cursor()
         if checkIfTablesExists(conn, cur):
             if len(userData) == 1:
+                print(userData)
                 cur.execute(command, (chat_id, message.chat.username, userData))
             elif len(userData) == 2:
+                print(userData)
                 cur.execute(command, (chat_id, message.chat.username, userData[0], userData[1]))
         else:
             bot.send_message(message.chat.id, "Tables are not exist")
@@ -339,7 +341,7 @@ def getUserInfo(message):
             temp_string = '',
             for lesson in result[5][day]:
                 temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
-                string = string + '\n' + str(temp_string)
+                string = str(string) + '\n' + str(temp_string)
             bot.send_message(message.chat.id, '[' + str(day) + ']\n' +
                              str(string)
                              )
