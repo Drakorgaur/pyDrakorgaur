@@ -302,7 +302,7 @@ def getUserInfo(message):
     )
     selector = (
         """
-        SELECT name, time_str, time_end  FROM lessons WHERE id = (%s) ORDER BY time_str ASC;
+        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s) ORDER BY time_str ASC;
         """
     )
     try:
