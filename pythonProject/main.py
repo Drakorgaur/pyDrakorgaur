@@ -83,15 +83,6 @@ def dropTables(message):
             conn.close()
 
 
-@bot.message_handler(commands=['add_user'])
-def createUser(message):
-    chat_id = message.chat.id
-    bot.send_message(chat_id,
-                     "Send me your name (and optional surname)(separate your inputs by space in format NAME SURNAME)")
-    bot.send_message(chat_id, "Example: \n Bob \n Bob Gray")
-    bot.register_next_step_handler(message, get_user_data)
-
-
 @bot.message_handler(commands=['show_user'])
 def showUserInfo(message):
     chat_id = message.chat.id
@@ -100,6 +91,15 @@ def showUserInfo(message):
         bot.register_next_step_handler(message, getUserInfo)
     else:
         bot.send_message(chat_id, "You dont have permission for this action")
+
+
+@bot.message_handler(commands=['add_user'])
+def createUser(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id,
+                     "Send me your name (and optional surname)(separate your inputs by space in format NAME SURNAME)")
+    bot.send_message(chat_id, "Example: \n Bob \n Bob Gray")
+    bot.register_next_step_handler(message, get_user_data)
 
 
 @bot.message_handler(commands=['status'])
@@ -246,6 +246,8 @@ def checkIfTablesExists(conn, cur):
         print(error)
 
     return boolean[0]
+
+    chat_id = message.chat.id
 
 
 def get_user_data(message):
