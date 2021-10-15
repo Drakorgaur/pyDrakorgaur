@@ -158,7 +158,7 @@ def createTable(message):
                         id INTEGER PRIMARY KEY,
                         name VARCHAR(255) NOT NULL,
                         day VARCHAR(255) NOT NULL,
-                        time_str VARCHAR(255) NOT NULL,
+                        time_str INTEGER NOT NULL,
                         time_end VARCHAR(255) NOT NULL
                         );
         """,
@@ -336,7 +336,7 @@ def getUserInfo(message):
             temp_string = '',
             for lesson in result[5][day]:
                 temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
-                string = str(string) + '\n' + str(temp_string)
+                string = string + '\n' + str(temp_string)
             bot.send_message(message.chat.id, '[' + str(day) + ']\n' +
                              str(string)
                              )
