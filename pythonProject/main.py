@@ -307,7 +307,7 @@ def getUserInfo(message):
     )
     selector = (
         """
-        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s) ORDER BY time_str ASC;
+        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s);
         """
     )
     try:
@@ -337,8 +337,8 @@ def getUserInfo(message):
                          "\nLessons: " + str(result[4])
                          )
         for day in ["Monday", "Tuesday", 'Wednesday', 'Thursday', 'Friday']:
-            string = '',
-            temp_string = '',
+            string = None
+            temp_string = None
             for lesson in result[5][day]:
                 temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
                 string = str(string) + '\n' + str(temp_string)
@@ -408,8 +408,13 @@ def divide(lessons):
             if week_day == lesson[1]:
                 concrete_day.append(lesson)
         sorted_day[week_day] = concrete_day
+        sorted_day = sorted_day.sort(key=getIndex)
     print(sorted_day)
     return sorted_day
+
+
+def getIndex(arr):
+    return arr[2]
 
 
 bot.infinity_polling()
