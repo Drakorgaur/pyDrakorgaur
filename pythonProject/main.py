@@ -60,6 +60,7 @@ def tableCreation(message):
 def dropTables(message):
     сommand = (
         """
+        DROP TABLE IF EXISTS user_lessons;
         DROP TABLE IF EXISTS users;
         DROP TABLE IF EXISTS lessons;
         """
