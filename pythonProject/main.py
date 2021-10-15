@@ -331,12 +331,12 @@ def getUserInfo(message):
                          "\nLast Name  " + result[3] +
                          "\nLessons: " + str(result[4])
                          )
-        for day in result[5]:
+        for day in ["Monday", "Tuesday", 'Wednesday', 'Thursday', 'Friday']:
             string = '',
             temp_string = '',
             for lesson in result[5][day]:
                 temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
-            string = str(string) + '\n' + str(temp_string)
+                string = str(string) + '\n' + str(temp_string)
             bot.send_message(message.chat.id, '[' + str(day) + ']\n' +
                              str(string)
                              )
@@ -395,6 +395,7 @@ def saveFile(message, dir, file_name):
 
 
 def divide(lessons):
+    print(lessons)
     sorted_day = {'Monday': None, 'Tuesday': None, 'Wednesday': None, 'Thursday': None, 'Friday': None}
     for week_day in ["Monday", "Tuesday", 'Wednesday', 'Thursday', 'Friday']:
         concrete_day = []
