@@ -408,7 +408,7 @@ def divide(lessons):
             if week_day == lesson[1]:
                 concrete_day.append(lesson)
         sorted_day[week_day] = concrete_day
-        sorted_day = sorted_day.sort(key=getIndex)
+        sorted_day[week_day] = sorted_day.sort(key=getIndex)
     print(sorted_day)
     return sorted_day
 
