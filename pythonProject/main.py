@@ -32,7 +32,7 @@ def downloadDoc(message):
     bot.register_next_step_handler(message, add_user_schedule)
 
 
-@bot.message_handler(commands=['add_schedule'])
+@bot.message_handler(commands=['schedule_compare'])
 def compareSchedule(message):
     chat_id = message.chat.id
     bot.send_message(chat_id, "Send me username you want to compare with")
