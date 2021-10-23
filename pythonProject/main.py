@@ -74,7 +74,7 @@ def compareUserSchedules(message):
     cur.close()
     conn.commit()
     for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
-        string = None
+        string = ''
         for lesson in common_lessons[day]:
             temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
             string = str(string) + '\n' + str(temp_string)
@@ -137,9 +137,8 @@ def dropTables(message):
 @bot.message_handler(commands=['show_user'])
 def showUserInfo(message):
     chat_id = message.chat.id
-    if chat_id == 455277222:
-        bot.send_message(chat_id, "What user do you want me to show?")
-        bot.register_next_step_handler(message, getUserInfo)
+    bot.send_message(chat_id, "What user do you want me to show?")
+    bot.register_next_step_handler(message, getUserInfo)
     else:
         bot.send_message(chat_id, "You dont have permission for this action")
 
@@ -390,7 +389,7 @@ def getUserInfo(message):
                          )
 
         for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
-            string = None
+            string = ''
             for lesson in result[5][day]:
                 temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
                 string = str(string) + '\n' + str(temp_string)
