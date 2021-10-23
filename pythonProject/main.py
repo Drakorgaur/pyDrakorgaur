@@ -21,7 +21,7 @@ class Help:
         self.file_path = file_path
 
 
-Help = Help('0')
+Help = Help(0)
 
 
 @bot.message_handler(commands=['add_schedule'])
@@ -30,6 +30,47 @@ def downloadDoc(message):
     #f = json.open('schledule (5).json')
     bot.send_message(chat_id, 'Send me json-format of your schedule')
     bot.register_next_step_handler(message, add_user_schedule)
+
+
+@bot.message_handler(commands=['add_schedule'])
+def compareSchedule(message):
+    chat_id = message.chat.id
+    bot.send_message(chat_id, "Send me username you want to compare with")
+    bot.register_next_step_handler(message, compareUserSchedules)
+
+def compareUserSchedules(message):
+    user = message.text
+    chat_id = message.chat.id
+    common_lessons = []
+    psql_get_user_lessons = (
+        """
+        SELECT lessons FROM user WHERE usename = (%s);
+        """
+    )
+    psql_select_lessons_by_id = (
+        """
+        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s);
+        """
+    )
+    conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
+    cur = conn.cursor()
+    schedule_main    = cur.execute(psql_get_user_lessons, chat_id)
+    schedule_compare = cur.execute(psql_get_user_lessons, user)
+    for item in schedule_main:
+        for sub_item in schedule_compare:
+            if item == sub_item:
+                common_lessons.append(item)
+    common_lessons = divide(cur.execute(psql_select_lessons_by_id, common_lessons))
+    cur.close()
+    conn.commit()
+    for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
+        string = None
+        for lesson in common_lessons[day]:
+            temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
+            string = str(string) + '\n' + str(temp_string)
+        bot.send_message(message.chat.id, '[' + str(day) + ']\n' +
+                         str(string)
+                         )
 
 
 @bot.message_handler(commands=['db_set'])
@@ -328,7 +369,6 @@ def getUserInfo(message):
             bot.send_message(message.chat.id, "Tables are not exist")
         cur.close()
         conn.commit()
-
         bot.send_message(message.chat.id,
                          "Chat ID  " + str(result[0]) +
                          "\nUsername  " + result[1] +
@@ -336,9 +376,9 @@ def getUserInfo(message):
                          "\nLast Name  " + result[3] +
                          "\nLessons: " + str(result[4])
                          )
-        for day in ["Monday", "Tuesday", 'Wednesday', 'Thursday', 'Friday']:
+
+        for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
             string = None
-            temp_string = None
             for lesson in result[5][day]:
                 temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
                 string = str(string) + '\n' + str(temp_string)
@@ -407,13 +447,7 @@ def divide(lessons):
             if week_day == lesson[1]:
                 concrete_day.append(lesson)
         sorted_day[week_day] = concrete_day
-        print('unsorted[' + week_day + ']')
-        print(sorted_day[week_day])
-        print('sorted')
         sorted_day[week_day].sort(key=getIndex)
-        print(sorted_day[week_day])
-    print('sorted day at all')
-    print(sorted_day)
     return sorted_day
 
 
