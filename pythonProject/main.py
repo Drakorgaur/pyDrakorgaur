@@ -59,21 +59,24 @@ def compareUserSchedules(message):
     schedule_main = cur.fetchone()
     cur.execute(psql_get_user_lessons, (username,))
     schedule_compare = cur.fetchone()
-    for item in schedule_main:
-        for sub_item in schedule_compare:
-            if item == sub_item:
-                common_lessons.append(item)
-    common_lessons = divide(cur.execute(psql_select_lessons_by_id, (common_lessons,)))
-    cur.close()
-    conn.commit()
-    for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
-        string = None
-        for lesson in common_lessons[day]:
-            temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
-            string = str(string) + '\n' + str(temp_string)
-        bot.send_message(message.chat.id, '[' + str(day) + ']\n' +
-                         str(string)
-                         )
+    print(schedule_main)
+    print("---------")
+    print(schedule_compare)
+    # for item in schedule_main:
+    #     for sub_item in schedule_compare:
+    #         if item == sub_item:
+    #             common_lessons.append(item)
+    # common_lessons = divide(cur.execute(psql_select_lessons_by_id, (common_lessons,)))
+    # cur.close()
+    # conn.commit()
+    # for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
+    #     string = None
+    #     for lesson in common_lessons[day]:
+    #         temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
+    #         string = str(string) + '\n' + str(temp_string)
+    #     bot.send_message(message.chat.id, '[' + str(day) + ']\n' +
+    #                      str(string)
+    #                      )
 
 
 @bot.message_handler(commands=['db_set'])
