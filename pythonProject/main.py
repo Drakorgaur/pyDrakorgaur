@@ -70,7 +70,9 @@ def compareUserSchedules(message):
                 print(str(item) + " and " + str(sub_item))
                 common_lessons.append(item)
 
-    common_lessons = divide(cur.execute(psql_select_lessons_by_id, (common_lessons,)))
+    temp = cur.execute(psql_select_lessons_by_id, (common_lessons,))
+    print(temp)
+    # common_lessons = divide(temp)
     cur.close()
     conn.commit()
     for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
