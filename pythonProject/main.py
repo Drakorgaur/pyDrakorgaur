@@ -42,6 +42,7 @@ def compareSchedule(message):
 def compareUserSchedules(message):
     username = message.text
     chat_id = message.chat.id
+    common_lessons_temp = []
     common_lessons = []
     psql_get_user_lessons = (
         """
@@ -50,7 +51,7 @@ def compareUserSchedules(message):
     )
     psql_select_lessons_by_id = (
         """
-        SELECT name, day, time_str, time_end  FROM lessons WHERE id = ANY( (%s) );
+        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s);
         """
     )
     conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
@@ -61,15 +62,14 @@ def compareUserSchedules(message):
     cur.execute(psql_get_user_lessons, (username,))
     schedule_compare = cur.fetchone()
     schedule_compare = schedule_compare[0]
-    print(schedule_main)
-    print("---------")
-    print(schedule_compare)
     for item in schedule_main:
         for sub_item in schedule_compare:
             if item == sub_item:
-                common_lessons.append(item)
+                common_lessons_temp.append(item)
 
-    cur.execute(psql_select_lessons_by_id, (common_lessons,))
+    for lesson in common_lessons_temp:
+        cur.execute(psql_select_lessons_by_id, (lesson,))
+        common_lessons.append(cur.fetchone())
     temp = cur.fetchone()
     print(temp)
     common_lessons = divide(temp)
