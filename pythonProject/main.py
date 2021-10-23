@@ -139,8 +139,7 @@ def showUserInfo(message):
     chat_id = message.chat.id
     bot.send_message(chat_id, "What user do you want me to show?")
     bot.register_next_step_handler(message, getUserInfo)
-    else:
-        bot.send_message(chat_id, "You dont have permission for this action")
+
 
 
 @bot.message_handler(commands=['add_user'])
