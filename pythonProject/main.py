@@ -50,7 +50,7 @@ def compareUserSchedules(message):
     )
     psql_select_lessons_by_id = (
         """
-        SELECT name, day, time_str, time_end  FROM lessons WHERE id IN (%s);
+        SELECT name, day, time_str, time_end  FROM lessons WHERE id = ANY( (%s) );
         """
     )
     conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
