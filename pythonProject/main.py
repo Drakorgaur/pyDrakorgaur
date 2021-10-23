@@ -45,12 +45,12 @@ def compareUserSchedules(message):
     common_lessons = []
     psql_get_user_lessons = (
         """
-        SELECT lessons FROM user WHERE usename = (%s,);
+        SELECT lessons FROM user WHERE usename = (%s);
         """
     )
     psql_select_lessons_by_id = (
         """
-        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s,);
+        SELECT name, day, time_str, time_end  FROM lessons WHERE id = (%s);
         """
     )
     conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
@@ -61,7 +61,7 @@ def compareUserSchedules(message):
         for sub_item in schedule_compare:
             if item == sub_item:
                 common_lessons.append(item)
-    common_lessons = divide(cur.execute(psql_select_lessons_by_id, common_lessons))
+    common_lessons = divide(cur.execute(psql_select_lessons_by_id, (common_lessons,)))
     cur.close()
     conn.commit()
     for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
