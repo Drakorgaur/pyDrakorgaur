@@ -400,7 +400,7 @@ def saveFile(message, dir, file_name):
 
 
 def divide(lessons):
-    sorted_day = {'Monday': None, 'Tuesday': None, 'Wednesday': None, 'Thursday': None, 'Friday': None}
+    sorted_day = {'Monday': '', 'Tuesday': '', 'Wednesday': '', 'Thursday': '', 'Friday': ''}
     for week_day in ["Monday", "Tuesday", 'Wednesday', 'Thursday', 'Friday']:
         concrete_day = []
         for lesson in lessons:
