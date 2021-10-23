@@ -57,8 +57,10 @@ def compareUserSchedules(message):
     cur = conn.cursor()
     cur.execute(psql_get_user_lessons, (message.chat.username,))
     schedule_main = cur.fetchone()
+    schedule_main = schedule_main[0]
     cur.execute(psql_get_user_lessons, (username,))
     schedule_compare = cur.fetchone()
+    schedule_compare = schedule_compare[0]
     print(schedule_main)
     print("---------")
     print(schedule_compare)
