@@ -401,7 +401,7 @@ def saveFile(message, dir, file_name):
 
 def divide(lessons):
     sorted_day = {'Monday': '', 'Tuesday': '', 'Wednesday': '', 'Thursday': '', 'Friday': ''}
-    for week_day in ["Monday", "Tuesday", 'Wednesday', 'Thursday', 'Friday']:
+    for week_day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
         concrete_day = []
         for lesson in lessons:
             if week_day == lesson[1]:
@@ -410,7 +410,7 @@ def divide(lessons):
         print('unsorted[' + week_day + ']')
         print(sorted_day[week_day])
         print('sorted')
-        sorted_day[week_day] = (sorted_day[week_day]).sort(key=getIndex)
+        sorted_day[week_day].sort(key=getIndex)
         print(sorted_day[week_day])
     print('sorted day at all')
     print(sorted_day)
