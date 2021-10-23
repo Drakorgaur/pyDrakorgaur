@@ -6,7 +6,7 @@ import psycopg2
 import os
 
 
-BOT_TOKEN = '2016564802:AAEln-7Je6d0pc_abFREDypJBu9UpS4lS6M'
+BOT_TOKEN = '2016564802--:AAF7vk3qFn5hkoLrYZuiecAyNvlAGafmOB8'
 
 bot = telebot.TeleBot(BOT_TOKEN)
 T_API = 'https://api.telegram.org/bot' + BOT_TOKEN + '/'
@@ -408,10 +408,9 @@ def divide(lessons):
                 concrete_day.append(lesson)
         sorted_day[week_day] = concrete_day
         print('sorted_day[week...]')
-        print('list --- sorted_day[week...]')
         print(sorted_day[week_day])
-        print(list(sorted_day[week_day]))
-        sorted_day[week_day] = list(sorted_day[week_day]).sort(key=getIndex)
+        print('list --- sorted_day[week...]')
+        sorted_day[week_day] = (sorted_day[week_day]).sort(key=getIndex)
     print('sorted day at all')
     print(sorted_day)
     return sorted_day
