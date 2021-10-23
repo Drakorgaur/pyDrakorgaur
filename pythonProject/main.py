@@ -38,8 +38,9 @@ def compareSchedule(message):
     bot.send_message(chat_id, "Send me username you want to compare with")
     bot.register_next_step_handler(message, compareUserSchedules)
 
+
 def compareUserSchedules(message):
-    user = message.text
+    username = message.text
     chat_id = message.chat.id
     common_lessons = []
     psql_get_user_lessons = (
@@ -54,8 +55,8 @@ def compareUserSchedules(message):
     )
     conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
     cur = conn.cursor()
-    schedule_main    = cur.execute(psql_get_user_lessons, chat_id)
-    schedule_compare = cur.execute(psql_get_user_lessons, user)
+    schedule_main = cur.execute(psql_get_user_lessons, message.chat.username)
+    schedule_compare = cur.execute(psql_get_user_lessons, username)
     for item in schedule_main:
         for sub_item in schedule_compare:
             if item == sub_item:
