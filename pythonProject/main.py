@@ -343,7 +343,7 @@ def transformUserData(message):
 def getUserInfo(message):
     select = (
         """
-        SELECT * FROM USERS WHERE username = (%s);
+        SELECT * FROM users WHERE username = (%s);
         """
     )
     selector = (
@@ -369,6 +369,8 @@ def getUserInfo(message):
             bot.send_message(message.chat.id, "Tables are not exist")
         cur.close()
         conn.commit()
+        if not result[3]:
+            result[3] = ' '
         bot.send_message(message.chat.id,
                          "Chat ID  " + str(result[0]) +
                          "\nUsername  " + result[1] +
