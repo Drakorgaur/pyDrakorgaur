@@ -67,22 +67,22 @@ def compareUserSchedules(message):
     for item in schedule_main:
         for sub_item in schedule_compare:
             if item == sub_item:
-                print(str(item) + " and " + str(sub_item))
                 common_lessons.append(item)
 
-    temp = cur.execute(psql_select_lessons_by_id, (common_lessons,))
+    cur.execute(psql_select_lessons_by_id, (common_lessons,))
+    temp = cur.fetchone()
     print(temp)
-    # common_lessons = divide(temp)
-    # cur.close()
-    # conn.commit()
-    # for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
-    #     string = None
-    #     for lesson in common_lessons[day]:
-    #         temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
-    #         string = str(string) + '\n' + str(temp_string)
-    #     bot.send_message(message.chat.id, '[' + str(day) + ']\n' +
-    #                      str(string)
-    #                      )
+    common_lessons = divide(temp)
+    cur.close()
+    conn.commit()
+    for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
+        string = None
+        for lesson in common_lessons[day]:
+            temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
+            string = str(string) + '\n' + str(temp_string)
+        bot.send_message(message.chat.id, '[' + str(day) + ']\n' +
+                         str(string)
+                         )
 
 
 @bot.message_handler(commands=['db_set'])
