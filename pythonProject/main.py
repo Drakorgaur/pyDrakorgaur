@@ -73,16 +73,16 @@ def compareUserSchedules(message):
     temp = cur.execute(psql_select_lessons_by_id, (common_lessons,))
     print(temp)
     # common_lessons = divide(temp)
-    cur.close()
-    conn.commit()
-    for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
-        string = None
-        for lesson in common_lessons[day]:
-            temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
-            string = str(string) + '\n' + str(temp_string)
-        bot.send_message(message.chat.id, '[' + str(day) + ']\n' +
-                         str(string)
-                         )
+    # cur.close()
+    # conn.commit()
+    # for day in ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday']:
+    #     string = None
+    #     for lesson in common_lessons[day]:
+    #         temp_string = '[' + str(lesson[0]) + ']    ' + str(lesson[2]) + ' do ' + str(lesson[3])
+    #         string = str(string) + '\n' + str(temp_string)
+    #     bot.send_message(message.chat.id, '[' + str(day) + ']\n' +
+    #                      str(string)
+    #                      )
 
 
 @bot.message_handler(commands=['db_set'])
