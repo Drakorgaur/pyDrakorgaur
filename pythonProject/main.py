@@ -45,7 +45,7 @@ def compareUserSchedules(message):
     common_lessons = []
     psql_get_user_lessons = (
         """
-        SELECT lessons FROM user WHERE usename = (%s);
+        SELECT lessons FROM users WHERE usename = (%s);
         """
     )
     psql_select_lessons_by_id = (
