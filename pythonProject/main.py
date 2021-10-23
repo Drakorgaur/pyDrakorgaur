@@ -66,7 +66,7 @@ def compareUserSchedules(message):
     print(schedule_compare)
     for item in schedule_main:
         for sub_item in schedule_compare:
-            print(item + " and " + sub_item)
+            print(str(item) + " and " + str(sub_item))
             if item == sub_item:
                 common_lessons.append(item)
 
