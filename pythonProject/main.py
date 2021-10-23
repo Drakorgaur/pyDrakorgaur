@@ -55,8 +55,10 @@ def compareUserSchedules(message):
     )
     conn = psycopg2.connect(dbname='testtable', user='remar', password='REmark0712', host='localhost', port='5432')
     cur = conn.cursor()
-    schedule_main = cur.execute(psql_get_user_lessons, (message.chat.username,))
-    schedule_compare = cur.execute(psql_get_user_lessons, (username,))
+    cur.execute(psql_get_user_lessons, (message.chat.username,))
+    schedule_main = cur.fetchone()
+    cur.execute(psql_get_user_lessons, (username,))
+    schedule_compare = cur.fetchone()
     for item in schedule_main:
         for sub_item in schedule_compare:
             if item == sub_item:
